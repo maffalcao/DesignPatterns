@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace DesignPatterns;
+namespace DesignPatterns.Behavioral;
 
 abstract class Iterator : IEnumerator
 {
