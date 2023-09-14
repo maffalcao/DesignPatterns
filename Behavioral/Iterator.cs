@@ -1,6 +1,6 @@
-using System.Collections;
+namespace Iterator;
 
-namespace DesignPatterns.Behavioral;
+using System.Collections;
 
 abstract class Iterator : IEnumerator
 {

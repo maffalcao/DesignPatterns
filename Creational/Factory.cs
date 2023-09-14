@@ -1,4 +1,4 @@
-namespace DesignPatterns.Creational;
+namespace Factory;
 
 abstract class Creator
 {
