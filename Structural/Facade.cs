@@ -1,78 +1,74 @@
-namespace Facade;
+namespace SimplifiedFacade;
 
-// The Facade class provides a simple interface to the complex logic of one
-// or several subsystems. The Facade delegates the client requests to the
-// appropriate objects within the subsystem. The Facade is also responsible
-// for managing their lifecycle. All of this shields the client from the
-// undesired complexity of the subsystem.
-public class Facade
+// The SimplifiedFacade class offers an easy-to-use interface to the complex operations
+// of one or more subsystems. It delegates client requests to the appropriate objects
+// within the subsystem and manages their lifecycle. This shields clients from the
+// intricate complexity of the subsystem.
+public class SimplifiedFacade
 {
-    protected Subsystem1 _subsystem1;
+    protected SubsystemA _subsystemA;
+    protected SubsystemB _subsystemB;
 
-    protected Subsystem2 _subsystem2;
-
-    public Facade(Subsystem1 subsystem1, Subsystem2 subsystem2)
+    public SimplifiedFacade(SubsystemA subsystemA, SubsystemB subsystemB)
     {
-        this._subsystem1 = subsystem1;
-        this._subsystem2 = subsystem2;
+        this._subsystemA = subsystemA;
+        this._subsystemB = subsystemB;
     }
 
-    // The Facade's methods are convenient shortcuts to the sophisticated
-    // functionality of the subsystems. However, clients get only to a
-    // fraction of a subsystem's capabilities.
-    public string Operation()
+    // Methods in the SimplifiedFacade provide simplified access to the advanced
+    // capabilities of the subsystems. However, clients only access a fraction of
+    // a subsystem's functionality.
+    public string PerformOperations()
     {
-        string result = "Facade initializes subsystems:\n";
-        result += this._subsystem1.operation1();
-        result += this._subsystem2.operation1();
-        result += "Facade orders subsystems to perform the action:\n";
-        result += this._subsystem1.operationN();
-        result += this._subsystem2.operationZ();
+        string result = "SimplifiedFacade initializes subsystems:\n";
+        result += this._subsystemA.Operation1();
+        result += this._subsystemB.Operation1();
+        result += "SimplifiedFacade instructs subsystems to perform actions:\n";
+        result += this._subsystemA.OperationN();
+        result += this._subsystemB.OperationZ();
         return result;
     }
 }
 
-// The Subsystem can accept requests either from the facade or client
-// directly. In any case, to the Subsystem, the Facade is yet another
-// client, and it's not a part of the Subsystem.
-public class Subsystem1
+// The Subsystem can handle requests from both the facade and the client directly.
+// To the Subsystem, the SimplifiedFacade is just another client and not part of
+// the Subsystem itself.
+public class SubsystemA
 {
-    public string operation1()
+    public string Operation1()
     {
-        return "Subsystem1: Ready!\n";
+        return "SubsystemA: Ready!\n";
     }
 
-    public string operationN()
+    public string OperationN()
     {
-        return "Subsystem1: Go!\n";
+        return "SubsystemA: Go!\n";
     }
 }
 
-// Some facades can work with multiple subsystems at the same time.
-public class Subsystem2
+// Some facades can work with multiple subsystems simultaneously.
+public class SubsystemB
 {
-    public string operation1()
+    public string Operation1()
     {
-        return "Subsystem2: Get ready!\n";
+        return "SubsystemB: Get ready!\n";
     }
 
-    public string operationZ()
+    public string OperationZ()
     {
-        return "Subsystem2: Fire!\n";
+        return "SubsystemB: Fire!\n";
     }
 }
-
 
 class Client
 {
-    // The client code works with complex subsystems through a simple
-    // interface provided by the Facade. When a facade manages the lifecycle
-    // of the subsystem, the client might not even know about the existence
-    // of the subsystem. This approach lets you keep the complexity under
-    // control.
-    public static void ClientCode(Facade facade)
+    // The client code interacts with complex subsystems through a user-friendly
+    // interface provided by the SimplifiedFacade. When the facade manages the
+    // subsystem's lifecycle, the client may not even be aware of the subsystem's existence.
+    // This approach keeps complexity in check.
+    public static void UseSimplifiedFacade(SimplifiedFacade facade)
     {
-        Console.Write(facade.Operation());
+        Console.Write(facade.PerformOperations());
     }
 }
 
@@ -80,14 +76,12 @@ class Program
 {
     static void Main(string[] args)
     {
-        // The client code may have some of the subsystem's objects already
-        // created. In this case, it might be worthwhile to initialize the
-        // Facade with these objects instead of letting the Facade create
-        // new instances.
-        Subsystem1 subsystem1 = new Subsystem1();
-        Subsystem2 subsystem2 = new Subsystem2();
-        Facade facade = new Facade(subsystem1, subsystem2);
-        Client.ClientCode(facade);
+        // The client code may already have some subsystem objects created. In such cases,
+        // it can be beneficial to initialize the SimplifiedFacade with these objects,
+        // rather than allowing the facade to create new instances.
+        SubsystemA subsystemA = new SubsystemA();
+        SubsystemB subsystemB = new SubsystemB();
+        SimplifiedFacade facade = new SimplifiedFacade(subsystemA, subsystemB);
+        Client.UseSimplifiedFacade(facade);
     }
 }
-

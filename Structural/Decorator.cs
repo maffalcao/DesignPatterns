@@ -1,27 +1,26 @@
-namespace Decorator;
+namespace ModifiedDecorator;
 
-// The base Component interface defines operations that can be altered by
+// The base Component interface defines operations that can be extended by
 // decorators.
 public abstract class Component
 {
-    public abstract string Operation();
+    public abstract string PerformOperation();
 }
 
 // Concrete Components provide default implementations of the operations.
-// There might be several variations of these classes.
+// There may be several variations of these classes.
 class ConcreteComponent : Component
 {
-    public override string Operation()
+    public override string PerformOperation()
     {
         return "ConcreteComponent";
     }
 }
 
-// The base Decorator class follows the same interface as the other
-// components. The primary purpose of this class is to define the wrapping
-// interface for all concrete decorators. The default implementation of the
-// wrapping code might include a field for storing a wrapped component and
-// the means to initialize it.
+// The base Decorator class follows the same interface as other
+// components. This class primarily defines the wrapping interface for all
+// concrete decorators. The default implementation of the wrapping code
+// includes a field to store a wrapped component and the means to initialize it.
 abstract class Decorator : Component
 {
     protected Component _component;
@@ -37,11 +36,11 @@ abstract class Decorator : Component
     }
 
     // The Decorator delegates all work to the wrapped component.
-    public override string Operation()
+    public override string PerformOperation()
     {
         if (this._component != null)
         {
-            return this._component.Operation();
+            return this._component.PerformOperation();
         }
         else
         {
@@ -50,20 +49,19 @@ abstract class Decorator : Component
     }
 }
 
-// Concrete Decorators call the wrapped object and alter its result in some
-// way.
+// Concrete Decorators invoke the wrapped object and modify its result in some way.
 class ConcreteDecoratorA : Decorator
 {
-    public ConcreteDecoratorA(Component comp) : base(comp)
+    public ConcreteDecoratorA(Component component) : base(component)
     {
     }
 
-    // Decorators may call parent implementation of the operation, instead
-    // of calling the wrapped object directly. This approach simplifies
-    // extension of decorator classes.
-    public override string Operation()
+    // Decorators can choose to call the parent implementation of the operation
+    // instead of calling the wrapped object directly. This approach simplifies
+    // the extension of decorator classes.
+    public override string PerformOperation()
     {
-        return $"ConcreteDecoratorA({base.Operation()})";
+        return $"ConcreteDecoratorA({base.PerformOperation()})";
     }
 }
 
@@ -71,24 +69,24 @@ class ConcreteDecoratorA : Decorator
 // a wrapped object.
 class ConcreteDecoratorB : Decorator
 {
-    public ConcreteDecoratorB(Component comp) : base(comp)
+    public ConcreteDecoratorB(Component component) : base(component)
     {
     }
 
-    public override string Operation()
+    public override string PerformOperation()
     {
-        return $"ConcreteDecoratorB({base.Operation()})";
+        return $"ConcreteDecoratorB({base.PerformOperation()})";
     }
 }
 
 public class Client
 {
     // The client code works with all objects using the Component interface.
-    // This way it can stay independent of the concrete classes of
-    // components it works with.
+    // This way, it can remain independent of the concrete classes of
+    // components it interacts with.
     public void ClientCode(Component component)
     {
-        Console.WriteLine("RESULT: " + component.Operation());
+        Console.WriteLine("RESULT: " + component.PerformOperation());
     }
 }
 
@@ -99,17 +97,13 @@ class Program
         Client client = new Client();
 
         var simple = new ConcreteComponent();
-        Console.WriteLine("Client: I get a simple component:");
+        Console.WriteLine("Client: I have a simple component:");
         client.ClientCode(simple);
         Console.WriteLine();
 
         // ...as well as decorated ones.
         //
-        // Note how decorators can wrap not only simple components but the
-        // other decorators as well.
-        ConcreteDecoratorA decorator1 = new ConcreteDecoratorA(simple);
-        ConcreteDecoratorB decorator2 = new ConcreteDecoratorB(decorator1);
-        Console.WriteLine("Client: Now I've got a decorated component:");
-        client.ClientCode(decorator2);
+        // Notice how decorators can wrap not only simple components but also
+
     }
 }
