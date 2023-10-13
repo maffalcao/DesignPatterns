@@ -1,104 +1,100 @@
-// The Command interface declares a method for executing a command.
-public interface ICommand
+// The CommandPatternDemo interface declares a method for executing a command.
+public interface ICommandPatternDemo
 {
     void Execute();
 }
 
 // Some commands can implement simple operations on their own.
-class SimpleCommand : ICommand
+class SimpleCommandPatternDemo : ICommandPatternDemo
 {
-    private string _payload = string.Empty;
+    private string _data = string.Empty;
 
-    public SimpleCommand(string payload)
+    public SimpleCommandPatternDemo(string data)
     {
-        this._payload = payload;
+        this._data = data;
     }
 
     public void Execute()
     {
-        Console.WriteLine($"SimpleCommand: See, I can do simple things like printing ({this._payload})");
+        Console.WriteLine($"SimpleCommandPatternDemo: I can perform simple actions like printing ({this._data})");
     }
 }
 
 // However, some commands can delegate more complex operations to other
 // objects, called "receivers."
-class ComplexCommand : ICommand
+class ComplexCommandPatternDemo : ICommandPatternDemo
 {
-    private Receiver _receiver;
+    private ReceiverPatternDemo _receiver;
 
     // Context data, required for launching the receiver's methods.
-    private string _a;
-
-    private string _b;
+    private string _inputA;
+    private string _inputB;
 
     // Complex commands can accept one or several receiver objects along
     // with any context data via the constructor.
-    public ComplexCommand(Receiver receiver, string a, string b)
+    public ComplexCommandPatternDemo(ReceiverPatternDemo receiver, string inputA, string inputB)
     {
         this._receiver = receiver;
-        this._a = a;
-        this._b = b;
+        this._inputA = inputA;
+        this._inputB = inputB;
     }
 
     // Commands can delegate to any methods of a receiver.
     public void Execute()
     {
-        Console.WriteLine("ComplexCommand: Complex stuff should be done by a receiver object.");
-        this._receiver.DoSomething(this._a);
-        this._receiver.DoSomethingElse(this._b);
+        Console.WriteLine("ComplexCommandPatternDemo: Complex tasks are handled by a receiver object.");
+        this._receiver.DoTaskA(this._inputA);
+        this._receiver.DoTaskB(this._inputB);
     }
 }
 
-// The Receiver classes contain some important business logic. They know how
-// to perform all kinds of operations, associated with carrying out a
-// request. In fact, any class may serve as a Receiver.
-class Receiver
+// The ReceiverPatternDemo class contains important business logic. It knows how
+// to perform all kinds of operations, associated with fulfilling a request.
+class ReceiverPatternDemo
 {
-    public void DoSomething(string a)
+    public void DoTaskA(string inputA)
     {
-        Console.WriteLine($"Receiver: Working on ({a}.)");
+        Console.WriteLine($"ReceiverPatternDemo: Working on Task A ({inputA}.)");
     }
 
-    public void DoSomethingElse(string b)
+    public void DoTaskB(string inputB)
     {
-        Console.WriteLine($"Receiver: Also working on ({b}.)");
+        Console.WriteLine($"ReceiverPatternDemo: Also working on Task B ({inputB}.)");
     }
 }
 
-// The Invoker is associated with one or several commands. It sends a
+// The InvokerPatternDemo is associated with one or several commands. It sends a
 // request to the command.
-class Invoker
+class InvokerPatternDemo
 {
-    private ICommand _onStart;
-
-    private ICommand _onFinish;
+    private ICommandPatternDemo _onStart;
+    private ICommandPatternDemo _onFinish;
 
     // Initialize commands.
-    public void SetOnStart(ICommand command)
+    public void SetOnStart(ICommandPatternDemo command)
     {
         this._onStart = command;
     }
 
-    public void SetOnFinish(ICommand command)
+    public void SetOnFinish(ICommandPatternDemo command)
     {
         this._onFinish = command;
     }
 
-    // The Invoker does not depend on concrete command or receiver classes.
-    // The Invoker passes a request to a receiver indirectly, by executing a
-    // command.
-    public void DoSomethingImportant()
+    // The InvokerPatternDemo does not depend on concrete command or receiver classes.
+    // The InvokerPatternDemo passes a request to a receiver indirectly, by executing a command.
+    public void PerformImportantTask()
     {
-        Console.WriteLine("Invoker: Does anybody want something done before I begin?");
-        if (this._onStart is ICommand)
+        Console.WriteLine("InvokerPatternDemo: Is there anything to do before I start?");
+        if (this._onStart is ICommandPatternDemo)
         {
             this._onStart.Execute();
         }
 
-        Console.WriteLine("Invoker: ...doing something really important...");
+        Console.WriteLine("InvokerPatternDemo: ...doing something truly significant...");
 
-        Console.WriteLine("Invoker: Does anybody want something done after I finish?");
-        if (this._onFinish is ICommand)
+        Console.WriteLine("InvokerPatternDemo: Is there anything to do after I finish?");
+        if (this._onFinish is ICommandPatternDemo)
         {
             this._onFinish.Execute();
         }
@@ -110,11 +106,11 @@ class Program
     static void Main(string[] args)
     {
         // The client code can parameterize an invoker with any commands.
-        Invoker invoker = new Invoker();
-        invoker.SetOnStart(new SimpleCommand("Say Hi!"));
-        Receiver receiver = new Receiver();
-        invoker.SetOnFinish(new ComplexCommand(receiver, "Send email", "Save report"));
+        InvokerPatternDemo invoker = new InvokerPatternDemo();
+        invoker.SetOnStart(new SimpleCommandPatternDemo("Greetings!"));
+        ReceiverPatternDemo receiver = new ReceiverPatternDemo();
+        invoker.SetOnFinish(new ComplexCommandPatternDemo(receiver, "Send notifications", "Generate report"));
 
-        invoker.DoSomethingImportant();
+        invoker.PerformImportantTask();
     }
 }

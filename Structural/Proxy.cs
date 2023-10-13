@@ -1,38 +1,38 @@
-namespace StructuralPatterns.ProxyExample;
+namespace MyProxyExample;
 
-// A shared interface for both RealEntity and Proxy, enabling clients to work with either of them.
-public interface IEntity
+// A common interface for both RealObject and Proxy, allowing clients to work with either of them.
+public interface IMyEntity
 {
-    void PerformRequest();
+    void ExecuteRequest();
 }
 
-// RealEntity contains the core business logic, which may be resource-intensive or sensitive.
-// The Proxy can enhance or control access to this logic without altering RealEntity.
-class RealEntity : IEntity
+// RealObject contains the core business logic, which can be resource-intensive or sensitive.
+// The Proxy can enhance or control access to this logic without modifying RealObject.
+class MyRealObject : IMyEntity
 {
-    public void PerformRequest()
+    public void ExecuteRequest()
     {
-        Console.WriteLine("RealEntity: Handling the request.");
+        Console.WriteLine("MyRealObject: Handling the request.");
     }
 }
 
-// The Proxy implements the same interface as RealEntity.
-class Proxy : IEntity
+// The Proxy implements the same interface as RealObject.
+class MyProxy : IMyEntity
 {
-    private RealEntity _realEntity;
+    private MyRealObject _realObject;
 
-    public Proxy(RealEntity realEntity)
+    public MyProxy(MyRealObject realObject)
     {
-        this._realEntity = realEntity;
+        this._realObject = realObject;
     }
 
     // The Proxy pattern is often used for lazy loading, caching, access control, and logging.
-    // It can delegate the request to RealEntity after performing these tasks.
-    public void PerformRequest()
+    // It can delegate the request to RealObject after performing these tasks.
+    public void ExecuteRequest()
     {
         if (this.CheckAccess())
         {
-            this._realEntity.PerformRequest();
+            this._realObject.ExecuteRequest();
             this.LogAccess();
         }
     }
@@ -40,44 +40,44 @@ class Proxy : IEntity
     public bool CheckAccess()
     {
         // Actual access checks should be implemented here.
-        Console.WriteLine("Proxy: Checking access before forwarding the request.");
+        Console.WriteLine("MyProxy: Checking access before forwarding the request.");
         return true;
     }
 
     public void LogAccess()
     {
-        Console.WriteLine("Proxy: Logging the request timestamp.");
+        Console.WriteLine("MyProxy: Logging the request timestamp.");
     }
 }
 
-public class Client
+public class MyClient
 {
-    // The client code interacts with objects via the IEntity interface,
-    // supporting both RealEntities and Proxies.
-    public void ClientLogic(IEntity entity)
+    // The client code interacts with objects through the IMyEntity interface,
+    // supporting both RealObjects and Proxies.
+    public void ClientLogic(IMyEntity entity)
     {
         // ...
 
-        entity.PerformRequest();
+        entity.ExecuteRequest();
 
         // ...
     }
 }
 
-class Program
+class MyProgram
 {
     static void Main(string[] args)
     {
-        Client client = new Client();
+        MyClient client = new MyClient();
 
-        Console.WriteLine("Client: Executing the client code with a real entity:");
-        RealEntity realEntity = new RealEntity();
-        client.ClientLogic(realEntity);
+        Console.WriteLine("Client: Running the client code with a real object:");
+        MyRealObject realObject = new MyRealObject();
+        client.ClientLogic(realObject);
 
         Console.WriteLine();
 
-        Console.WriteLine("Client: Executing the same client code with a proxy:");
-        Proxy proxy = new Proxy(realEntity);
+        Console.WriteLine("Client: Running the same client code with a proxy:");
+        MyProxy proxy = new MyProxy(realObject);
         client.ClientLogic(proxy);
     }
 }

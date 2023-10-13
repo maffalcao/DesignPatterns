@@ -1,70 +1,69 @@
-namespace Iterator;
+namespace NewIterator;
 
 using System.Collections;
 
-abstract class Iterator : IEnumerator
+abstract class IteratorPatternDemo : IEnumerator
 {
-    object IEnumerator.Current => Current();
+    object IEnumerator.Current => GetCurrent();
 
-    // Returns the key of the current element
-    public abstract int Key();
+    // Get the key of the current element
+    public abstract int GetKey();
 
-    // Returns the current element
-    public abstract object Current();
+    // Get the current element
+    public abstract object GetCurrent();
 
-    // Move forward to next element
-    public abstract bool MoveNext();
+    // Move to the next element
+    public abstract bool MoveToNext();
 
-    // Rewinds the Iterator to the first element
-    public abstract void Reset();
+    // Rewind the iterator to the first element
+    public abstract void ResetIterator();
 }
 
-abstract class IteratorAggregate : IEnumerable
+abstract class IteratorAggregatePatternDemo : IEnumerable
 {
-    // Returns an Iterator or another IteratorAggregate for the implementing
-    // object.
+    // Get an Iterator or another IteratorAggregate for the implementing object.
     public abstract IEnumerator GetEnumerator();
 }
 
 // Concrete Iterators implement various traversal algorithms. These classes
-// store the current traversal position at all times.
-class AlphabeticalOrderIterator : Iterator
+// maintain the current traversal position at all times.
+class AlphabeticalOrderIteratorPatternDemo : IteratorPatternDemo
 {
-    private WordsCollection _collection;
+    private WordsCollectionPatternDemo _collection;
 
-    // Stores the current traversal position. An iterator may have a lot of
-    // other fields for storing iteration state, especially when it is
-    // supposed to work with a particular kind of collection.
+    // Stores the current traversal position. An iterator may have other fields
+    // for maintaining iteration state, especially for working with specific
+    // types of collections.
     private int _position = -1;
 
     private bool _reverse = false;
 
-    public AlphabeticalOrderIterator(WordsCollection collection, bool reverse = false)
+    public AlphabeticalOrderIteratorPatternDemo(WordsCollectionPatternDemo collection, bool reverse = false)
     {
         _collection = collection;
         _reverse = reverse;
 
         if (reverse)
         {
-            _position = collection.getItems().Count;
+            _position = collection.GetItems().Count;
         }
     }
 
-    public override object Current()
+    public override object GetCurrent()
     {
-        return this._collection.getItems()[_position];
+        return this._collection.GetItems()[_position];
     }
 
-    public override int Key()
+    public override int GetKey()
     {
         return this._position;
     }
 
-    public override bool MoveNext()
+    public override bool MoveToNext()
     {
         int updatedPosition = this._position + (this._reverse ? -1 : 1);
 
-        if (updatedPosition >= 0 && updatedPosition < this._collection.getItems().Count)
+        if (updatedPosition >= 0 && updatedPosition < this._collection.GetItems().Count)
         {
             this._position = updatedPosition;
             return true;
@@ -75,15 +74,15 @@ class AlphabeticalOrderIterator : Iterator
         }
     }
 
-    public override void Reset()
+    public override void ResetIterator()
     {
-        this._position = this._reverse ? this._collection.getItems().Count - 1 : 0;
+        this._position = this._reverse ? this._collection.GetItems().Count - 1 : 0;
     }
 }
 
-// Concrete Collections provide one or several methods for retrieving fresh
-// iterator instances, compatible with the collection class.
-class WordsCollection : IteratorAggregate
+// Concrete Collections provide one or more methods for getting new
+// iterator instances compatible with the collection class.
+class WordsCollectionPatternDemo : IteratorAggregatePatternDemo
 {
     List<string> _collection = new List<string>();
 
@@ -94,7 +93,7 @@ class WordsCollection : IteratorAggregate
         _direction = !_direction;
     }
 
-    public List<string> getItems()
+    public List<string> GetItems()
     {
         return _collection;
     }
@@ -106,7 +105,7 @@ class WordsCollection : IteratorAggregate
 
     public override IEnumerator GetEnumerator()
     {
-        return new AlphabeticalOrderIterator(this, _direction);
+        return new AlphabeticalOrderIteratorPatternDemo(this, _direction);
     }
 }
 
@@ -116,13 +115,13 @@ class Program
     {
         // The client code may or may not know about the Concrete Iterator
         // or Collection classes, depending on the level of indirection you
-        // want to keep in your program.
-        var collection = new WordsCollection();
+        // want to maintain in your program.
+        var collection = new WordsCollectionPatternDemo();
         collection.AddItem("First");
         collection.AddItem("Second");
         collection.AddItem("Third");
 
-        Console.WriteLine("Straight traversal:");
+        Console.WriteLine("Forward traversal:");
 
         foreach (var element in collection)
         {

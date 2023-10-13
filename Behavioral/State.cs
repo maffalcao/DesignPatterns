@@ -1,86 +1,86 @@
-namespace State;
+namespace NewState;
 
-// The Context defines the interface of interest to clients. It also
-// maintains a reference to an instance of a State subclass, which
-// represents the current state of the Context.
-class Context
+// The StatePatternDemo defines the interface of interest to clients. It also
+// maintains a reference to an instance of a ConcreteState subclass, which
+// represents the current state of the StatePatternDemo.
+class StatePatternDemo
 {
-    // A reference to the current state of the Context.
-    private State _state = null;
+    // A reference to the current state of the StatePatternDemo.
+    private ConcreteState _currentState = null;
 
-    public Context(State state)
+    public StatePatternDemo(ConcreteState state)
     {
-        this.TransitionTo(state);
+        this.SwitchToState(state);
     }
 
-    // The Context allows changing the State object at runtime.
-    public void TransitionTo(State state)
+    // The StatePatternDemo allows changing the ConcreteState object at runtime.
+    public void SwitchToState(ConcreteState state)
     {
-        Console.WriteLine($"Context: Transition to {state.GetType().Name}.");
-        this._state = state;
-        this._state.SetContext(this);
+        Console.WriteLine($"StatePatternDemo: Switch to {state.GetType().Name} state.");
+        this._currentState = state;
+        this._currentState.SetStatePatternDemo(this);
     }
 
-    // The Context delegates part of its behavior to the current State
+    // The StatePatternDemo delegates part of its behavior to the current ConcreteState
     // object.
-    public void Request1()
+    public void Action1()
     {
-        this._state.Handle1();
+        this._currentState.PerformAction1();
     }
 
-    public void Request2()
+    public void Action2()
     {
-        this._state.Handle2();
-    }
-}
-
-// The base State class declares methods that all Concrete State should
-// implement and also provides a backreference to the Context object,
-// associated with the State. This backreference can be used by States to
-// transition the Context to another State.
-abstract class State
-{
-    protected Context _context;
-
-    public void SetContext(Context context)
-    {
-        this._context = context;
-    }
-
-    public abstract void Handle1();
-
-    public abstract void Handle2();
-}
-
-// Concrete States implement various behaviors, associated with a state of
-// the Context.
-class ConcreteStateA : State
-{
-    public override void Handle1()
-    {
-        Console.WriteLine("ConcreteStateA handles request1.");
-        Console.WriteLine("ConcreteStateA wants to change the state of the context.");
-        this._context.TransitionTo(new ConcreteStateB());
-    }
-
-    public override void Handle2()
-    {
-        Console.WriteLine("ConcreteStateA handles request2.");
+        this._currentState.PerformAction2();
     }
 }
 
-class ConcreteStateB : State
+// The base ConcreteState class declares methods that all ConcreteState should
+// implement and provides a backreference to the StatePatternDemo object.
+// This backreference can be used by ConcreteStates to transition the StatePatternDemo
+// to another state.
+abstract class ConcreteState
 {
-    public override void Handle1()
+    protected StatePatternDemo _statePatternDemo;
+
+    public void SetStatePatternDemo(StatePatternDemo statePatternDemo)
     {
-        Console.Write("ConcreteStateB handles request1.");
+        this._statePatternDemo = statePatternDemo;
     }
 
-    public override void Handle2()
+    public abstract void PerformAction1();
+
+    public abstract void PerformAction2();
+}
+
+// Concrete ConcreteStates implement various behaviors associated with a state of
+// the StatePatternDemo.
+class StateA : ConcreteState
+{
+    public override void PerformAction1()
     {
-        Console.WriteLine("ConcreteStateB handles request2.");
-        Console.WriteLine("ConcreteStateB wants to change the state of the context.");
-        this._context.TransitionTo(new ConcreteStateA());
+        Console.WriteLine("StateA handles action1.");
+        Console.WriteLine("StateA wants to switch to another state.");
+        this._statePatternDemo.SwitchToState(new StateB());
+    }
+
+    public override void PerformAction2()
+    {
+        Console.WriteLine("StateA handles action2.");
+    }
+}
+
+class StateB : ConcreteState
+{
+    public override void PerformAction1()
+    {
+        Console.Write("StateB handles action1.");
+    }
+
+    public override void PerformAction2()
+    {
+        Console.WriteLine("StateB handles action2.");
+        Console.WriteLine("StateB wants to switch to another state.");
+        this._statePatternDemo.SwitchToState(new StateA());
     }
 }
 
@@ -89,8 +89,8 @@ class Program
     static void Main(string[] args)
     {
         // The client code.
-        var context = new Context(new ConcreteStateA());
-        context.Request1();
-        context.Request2();
+        var statePatternDemo = new StatePatternDemo(new StateA());
+        statePatternDemo.Action1();
+        statePatternDemo.Action2();
     }
 }

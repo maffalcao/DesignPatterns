@@ -1,46 +1,45 @@
-namespace ModifiedDecorator;
+namespace NewModifiedDecorator;
 
-// The base Component interface defines operations that can be extended by
-// decorators.
-public abstract class Component
+// The Component base class defines the interface for components that can be
+// extended by decorators.
+public abstract class MyComponent
 {
-    public abstract string PerformOperation();
+    public abstract string PerformTask();
 }
 
 // Concrete Components provide default implementations of the operations.
-// There may be several variations of these classes.
-class ConcreteComponent : Component
+class MyConcreteComponent : MyComponent
 {
-    public override string PerformOperation()
+    public override string PerformTask()
     {
         return "ConcreteComponent";
     }
 }
 
-// The base Decorator class follows the same interface as other
+// The Decorator base class follows the same interface as other
 // components. This class primarily defines the wrapping interface for all
 // concrete decorators. The default implementation of the wrapping code
 // includes a field to store a wrapped component and the means to initialize it.
-abstract class Decorator : Component
+abstract class MyDecorator : MyComponent
 {
-    protected Component _component;
+    protected MyComponent _component;
 
-    public Decorator(Component component)
+    public MyDecorator(MyComponent component)
     {
         this._component = component;
     }
 
-    public void SetComponent(Component component)
+    public void SetComponent(MyComponent component)
     {
         this._component = component;
     }
 
     // The Decorator delegates all work to the wrapped component.
-    public override string PerformOperation()
+    public override string PerformTask()
     {
         if (this._component != null)
         {
-            return this._component.PerformOperation();
+            return this._component.PerformTask();
         }
         else
         {
@@ -50,55 +49,55 @@ abstract class Decorator : Component
 }
 
 // Concrete Decorators invoke the wrapped object and modify its result in some way.
-class ConcreteDecoratorA : Decorator
+class MyConcreteDecoratorA : MyDecorator
 {
-    public ConcreteDecoratorA(Component component) : base(component)
+    public MyConcreteDecoratorA(MyComponent component) : base(component)
     {
     }
 
     // Decorators can choose to call the parent implementation of the operation
     // instead of calling the wrapped object directly. This approach simplifies
     // the extension of decorator classes.
-    public override string PerformOperation()
+    public override string PerformTask()
     {
-        return $"ConcreteDecoratorA({base.PerformOperation()})";
+        return $"ConcreteDecoratorA({base.PerformTask()})";
     }
 }
 
 // Decorators can execute their behavior either before or after the call to
 // a wrapped object.
-class ConcreteDecoratorB : Decorator
+class MyConcreteDecoratorB : MyDecorator
 {
-    public ConcreteDecoratorB(Component component) : base(component)
+    public MyConcreteDecoratorB(MyComponent component) : base(component)
     {
     }
 
-    public override string PerformOperation()
+    public override string PerformTask()
     {
-        return $"ConcreteDecoratorB({base.PerformOperation()})";
+        return $"ConcreteDecoratorB({base.PerformTask()})";
     }
 }
 
-public class Client
+public class MyClient
 {
     // The client code works with all objects using the Component interface.
     // This way, it can remain independent of the concrete classes of
     // components it interacts with.
-    public void ClientCode(Component component)
+    public void Execute(MyComponent component)
     {
-        Console.WriteLine("RESULT: " + component.PerformOperation());
+        Console.WriteLine("RESULT: " + component.PerformTask());
     }
 }
 
-class Program
+class MyProgram
 {
     static void Main(string[] args)
     {
-        Client client = new Client();
+        MyClient client = new MyClient();
 
-        var simple = new ConcreteComponent();
+        var simple = new MyConcreteComponent();
         Console.WriteLine("Client: I have a simple component:");
-        client.ClientCode(simple);
+        client.Execute(simple);
         Console.WriteLine();
 
         // ...as well as decorated ones.

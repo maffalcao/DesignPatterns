@@ -1,87 +1,87 @@
-namespace SimplifiedFacade;
+namespace MyEasyFacade;
 
-// The SimplifiedFacade class offers an easy-to-use interface to the complex operations
+// The EasyFacade class offers a user-friendly interface to the complex operations
 // of one or more subsystems. It delegates client requests to the appropriate objects
 // within the subsystem and manages their lifecycle. This shields clients from the
 // intricate complexity of the subsystem.
-public class SimplifiedFacade
+public class MyEasyFacade
 {
-    protected SubsystemA _subsystemA;
-    protected SubsystemB _subsystemB;
+    protected MySubsystemA _subsystemA;
+    protected MySubsystemB _subsystemB;
 
-    public SimplifiedFacade(SubsystemA subsystemA, SubsystemB subsystemB)
+    public MyEasyFacade(MySubsystemA subsystemA, MySubsystemB subsystemB)
     {
         this._subsystemA = subsystemA;
         this._subsystemB = subsystemB;
     }
 
-    // Methods in the SimplifiedFacade provide simplified access to the advanced
+    // Methods in the EasyFacade provide simplified access to the advanced
     // capabilities of the subsystems. However, clients only access a fraction of
     // a subsystem's functionality.
-    public string PerformOperations()
+    public string ExecuteOperations()
     {
-        string result = "SimplifiedFacade initializes subsystems:\n";
-        result += this._subsystemA.Operation1();
-        result += this._subsystemB.Operation1();
-        result += "SimplifiedFacade instructs subsystems to perform actions:\n";
-        result += this._subsystemA.OperationN();
-        result += this._subsystemB.OperationZ();
+        string result = "MyEasyFacade initializes subsystems:\n";
+        result += this._subsystemA.Operate1();
+        result += this._subsystemB.Operate1();
+        result += "MyEasyFacade instructs subsystems to perform actions:\n";
+        result += this._subsystemA.OperateN();
+        result += this._subsystemB.OperateZ();
         return result;
     }
 }
 
 // The Subsystem can handle requests from both the facade and the client directly.
-// To the Subsystem, the SimplifiedFacade is just another client and not part of
+// To the Subsystem, the EasyFacade is just another client and not part of
 // the Subsystem itself.
-public class SubsystemA
+public class MySubsystemA
 {
-    public string Operation1()
+    public string Operate1()
     {
-        return "SubsystemA: Ready!\n";
+        return "MySubsystemA: Ready!\n";
     }
 
-    public string OperationN()
+    public string OperateN()
     {
-        return "SubsystemA: Go!\n";
+        return "MySubsystemA: Go!\n";
     }
 }
 
 // Some facades can work with multiple subsystems simultaneously.
-public class SubsystemB
+public class MySubsystemB
 {
-    public string Operation1()
+    public string Operate1()
     {
-        return "SubsystemB: Get ready!\n";
+        return "MySubsystemB: Get ready!\n";
     }
 
-    public string OperationZ()
+    public string OperateZ()
     {
-        return "SubsystemB: Fire!\n";
+        return "MySubsystemB: Fire!\n";
     }
 }
 
-class Client
+class MyClient
 {
     // The client code interacts with complex subsystems through a user-friendly
-    // interface provided by the SimplifiedFacade. When the facade manages the
+    // interface provided by the EasyFacade. When the facade manages the
     // subsystem's lifecycle, the client may not even be aware of the subsystem's existence.
     // This approach keeps complexity in check.
-    public static void UseSimplifiedFacade(SimplifiedFacade facade)
+    public static void UseMyEasyFacade(MyEasyFacade facade)
     {
-        Console.Write(facade.PerformOperations());
+        Console.Write(facade.ExecuteOperations());
     }
 }
 
-class Program
+class MyProgram
 {
     static void Main(string[] args)
     {
         // The client code may already have some subsystem objects created. In such cases,
-        // it can be beneficial to initialize the SimplifiedFacade with these objects,
+        // it can be beneficial to initialize the EasyFacade with these objects,
         // rather than allowing the facade to create new instances.
-        SubsystemA subsystemA = new SubsystemA();
-        SubsystemB subsystemB = new SubsystemB();
-        SimplifiedFacade facade = new SimplifiedFacade(subsystemA, subsystemB);
-        Client.UseSimplifiedFacade(facade);
+        MySubsystemA subsystemA = new MySubsystemA();
+        MySubsystemB subsystemB = new MySubsystemB();
+        MyEasyFacade facade = new MyEasyFacade(subsystemA, subsystemB);
+        MyClient.UseMyEasyFacade(facade);
     }
 }
